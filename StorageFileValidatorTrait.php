@@ -17,7 +17,12 @@ trait StorageFileValidatorTrait
 
         $file->name = $value['name'];
 
-        $file->tempName = Yii::getAlias('@storage/web') . '/source' . $value['path'];
+        $file->tempName = realpath(Yii::getAlias('@storage/web') . '/source' . $value['path']);
+
+        if (!$file->name)
+        {
+            $file->name = pathinfo($file->tempName, PATHINFO_BASENAME);
+        }
 
         $file->type = $value['type'];
 
