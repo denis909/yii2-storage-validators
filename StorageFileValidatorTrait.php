@@ -8,6 +8,20 @@ use yii\web\UploadedFile;
 trait StorageFileValidatorTrait
 {
 
+    protected function preparePath($path)
+    {
+        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+
+        $path = ltrim($path, '/');
+
+        if ($path)
+        {
+            $path = '/' . $path;
+        }
+
+        return $path;
+    }
+
     /**
      * @return yii\web\UploadedFile
      */
@@ -17,7 +31,7 @@ trait StorageFileValidatorTrait
 
         $file->name = $value['name'];
 
-        $file->tempName = realpath(Yii::getAlias('@storage/web') . '/source' . $value['path']);
+        $file->tempName = realpath(Yii::getAlias('@storage/web') . '/source' . $this->preparePath($value['path']));
 
         if (!$file->name)
         {
