@@ -25,13 +25,20 @@ trait StorageFileValidatorTrait
     /**
      * @return yii\web\UploadedFile
      */
-    public function createUploadedFile(array $value) : UploadedFile
+    public function createUploadedFile(array $value) : ?UploadedFile
     {
+        $path = realpath(Yii::getAlias('@storage/web') . '/source' . $this->preparePath($value['path']));
+
+        if (!$path)
+        {
+            return null;
+        }
+
         $file = new UploadedFile;
 
         $file->name = $value['name'];
 
-        $file->tempName = realpath(Yii::getAlias('@storage/web') . '/source' . $this->preparePath($value['path']));
+        $file->tempName = $path;
 
         if (!$file->name)
         {
